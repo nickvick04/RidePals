@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <h1>Search for Riders</h1>
+  
+  <form method="get" action="{% url 'search' %}">
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Search</button>
+  </form>
+
+  {% if inputExists %}
+    <h2>Search Results:</h2>
+    {% if people %}
+      <ul>
+        {% for person in people %}
+          <li>
+            {{ person.first_name }} - 
+            From: {{ person.origination_city }}, {{ person.origination_state }} 
+            To: {{ person.destination_city }}, {{ person.destination_state }} 
+            on {{ person.date }} at {{ person.time }}
+            (Seats: {{ person.seats_available }})
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No riders found for that state.</p>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}
