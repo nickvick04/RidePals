@@ -9,7 +9,11 @@ from .forms import RideForm
 
 
 def index(request):
+  context = {}
+  return render(request, "index_view.html", context)
 
+
+def search(request):
   context = {}
 
   if "search" in request.GET:
@@ -22,4 +26,4 @@ def index(request):
         
   context["form"] = RideForm()
 
-  return render(request, "index_view.html", context)
+  return render(request, "search_view.html", context)
