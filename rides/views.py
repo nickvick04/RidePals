@@ -14,8 +14,10 @@ def index(request):
 
   if "search" in request.GET:
     context["inputExists"] = True
-    search = request.GET["search"]    
-    context["people"] = Person.objects.filter(first_name=search) | Person.objects.filter(origination__icontains=search)
+    search = request.GET["search"].strip().upper()  # Convert to uppercase and strip whitespace
+    
+    # Search for people by origination_state or destination_state (case-insensitive)
+    context["people"] = Person.objects.filter(origination_state__iexact=search) | Person.objects.filter(destination_state__iexact=search)
 
         
   context["form"] = RideForm()
