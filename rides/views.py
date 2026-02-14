@@ -22,7 +22,7 @@ def parse_location(location_string):
   if not location_string:
     return None, None
   
-  # Remove extra whitespace and convert to title case for city, upper for state
+  # Remove extra whitespace
   location_string = location_string.strip()
   
   # Try splitting by comma first
@@ -33,16 +33,22 @@ def parse_location(location_string):
       state = parts[1].strip().upper()
       return city, state
   
-  # If no comma, split by space and take last part as state
+  # If no comma, split by space and check if last part looks like a state (2 chars)
   parts = location_string.rsplit(None, 1)  # Split from right, max 1 split
   if len(parts) == 2:
-    city = parts[0].strip()
-    state = parts[1].strip().upper()
-    return city, state
+    potential_state = parts[1].strip()
+    # Only treat as state if it's exactly 2 characters (state abbreviation)
+    if len(potential_state) == 2 and potential_state.isalpha():
+      city = parts[0].strip()
+      state = potential_state.upper()
+      return city, state
+    else:
+      # The "state" part is actually part of the city name
+      return location_string, None
   elif len(parts) == 1:
     # Only one part, could be just city or just state
     part = parts[0].strip()
-    if len(part) <= 2:
+    if len(part) == 2 and part.isalpha():
       # Likely a state abbreviation
       return None, part.upper()
     else:
