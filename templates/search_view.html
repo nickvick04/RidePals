@@ -89,7 +89,39 @@
         form {
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            color: #333;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        input[type="text"] {
+            padding: 1rem;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .search-hint {
+            color: #666;
+            font-size: 0.9rem;
+            font-style: italic;
+            margin-top: 0.5rem;
         }
 
         label {
@@ -204,7 +236,18 @@
             <h1>🔍 Search for Riders</h1>
             
             <form method="get" action="{% url 'rides:search' %}">
-                {{ form.as_p }}
+                <div class="form-group">
+                    {{ form.origin_state.label_tag }}
+                    {{ form.origin_state }}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.destination_state.label_tag }}
+                    {{ form.destination_state }}
+                </div>
+                
+                <p class="search-hint">Leave either field blank to search all states</p>
+                
                 <button type="submit" class="btn">Search</button>
             </form>
         </div>
