@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Q
 
 from .models import Person
 
@@ -16,12 +17,24 @@ def index(request):
 def search(request):
   context = {}
 
-  if "search" in request.GET:
+  if "origin_state" in request.GET or "destination_state" in request.GET:
     context["inputExists"] = True
-    search = request.GET["search"].strip().upper()  # Convert to uppercase and strip whitespace
     
-    # Search for people by origination_state or destination_state (case-insensitive)
-    context["people"] = Person.objects.filter(origination_state__iexact=search) | Person.objects.filter(destination_state__iexact=search)
+    origin_state = request.GET.get("origin_state", "").strip().upper()
+    destination_state = request.GET.get("destination_state", "").strip().upper()
+    
+    # Start with all people
+    people = Person.objects.all()
+    
+    # Filter by origin state if provided
+    if origin_state:
+      people = people.filter(origination_state__iexact=origin_state)
+    
+    # Filter by destination state if provided
+    if destination_state:
+      people = people.filter(destination_state__iexact=destination_state)
+    
+    context["people"] = people
 
         
   context["form"] = RideForm()
