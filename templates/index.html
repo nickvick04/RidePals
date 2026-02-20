@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<main class="hero">
+    <div class="logo-container">
+        <img src="{% static 'logo.jpg' %}" alt="RidePals Logo">
+    </div>
+
+    <h1>Welcome to RidePals</h1>
+    <p class="tagline">Share rides, save money, and reduce your carbon footprint</p>
+
+    <div class="cta-buttons">
+        <a href="{% url 'rides:search' %}" class="btn btn-primary">Find a Ride</a>
+        <a href="#" class="btn btn-secondary">Offer a Ride</a>
+    </div>
+
+    <div class="features">
+        <div class="feature-card">
+            <div class="feature-icon">💰</div>
+            <h3 class="feature-title">Save Money</h3>
+            <p class="feature-description">Split fuel costs and reduce your commuting expenses</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🌍</div>
+            <h3 class="feature-title">Eco-Friendly</h3>
+            <p class="feature-description">Reduce carbon emissions by sharing rides</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🤝</div>
+            <h3 class="feature-title">Meet People</h3>
+            <p class="feature-description">Connect with fellow commuters in your area</p>
+        </div>
+    </div>
+</main>
+{% endblock %}

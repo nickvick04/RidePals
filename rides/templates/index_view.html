@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="main"> 
-  <table>
+<div class="card" style="max-width: 900px; margin: 30px auto; color: #111;">
+  <h2 style="margin-bottom: 14px;">Available Rides</h2>
+  <table style="width:100%; border-collapse: collapse;">
       {% for person in people %}
       <tr>
           <td>{{ person.first_name }}</td> 
@@ -18,8 +19,12 @@
   </table>
 </div> 
 
-<form action="{% url 'rides:index' %}" method="get">
-    {{ form }}
-    <input type="submit" value="Submit">
-</form>
+<div class="card" style="max-width: 650px; margin: 40px auto; color: #111;">
+  <h2 style="margin-bottom: 14px;">Search Riders</h2>
+
+  <form action="{% url 'rides:index' %}" method="get" onsubmit="return checkForm();">
+      {{ form.as_p }}
+      <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
 {% endblock %}

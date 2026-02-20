@@ -9,11 +9,6 @@ from .forms import RideForm
 # Create your views here.
 
 
-def index(request):
-  context = {}
-  return render(request, "index_view.html", context)
-
-
 def parse_location(location_string):
   """
   Parse a location string like "Los Angeles, CA" or "Los Angeles CA"
@@ -59,6 +54,7 @@ def parse_location(location_string):
 
 
 def search(request):
+  print("HIT SEARCH VIEW")
   context = {}
 
   if "origin" in request.GET or "destination" in request.GET:
