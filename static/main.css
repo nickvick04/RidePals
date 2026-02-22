@@ -33,6 +33,16 @@ nav {
   font-weight: bold;
   color: #667eea;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.nav-brand-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 6px;
 }
 
 .nav-links {
@@ -220,6 +230,40 @@ nav {
   flex-direction: column;
   gap: 0.5rem;
   margin-bottom: 1rem;
+}
+
+.search-box .form-group label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #3f4a74;
+}
+
+.search-box .form-group input[type="text"],
+.search-box .form-group input[type="search"],
+.search-box .form-group input[type="email"],
+.search-box .form-group input[type="tel"] {
+  width: 100%;
+  border: 1.5px solid #d9def5;
+  border-radius: 14px;
+  background: #fbfcff;
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+  color: #1f2640;
+  box-shadow: 0 2px 8px rgba(18, 24, 53, 0.06);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  appearance: none;
+}
+
+.search-box .form-group input::placeholder {
+  color: #8d96bf;
+}
+
+.search-box .form-group input:focus {
+  outline: none;
+  border-color: #667eea;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.18), 0 8px 20px rgba(102, 126, 234, 0.14);
 }
 
 .search-hint {
