@@ -1,10 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
+from django.contrib import messages
+from datetime import date, datetime
 
-from .models import Person
+from .models import Person, Booking
 
 # relative import of forms
-from .forms import RideForm
+from .forms import RideForm, NewRideForm, BookingForm
 
 # Create your views here.
 
@@ -57,6 +59,14 @@ def search(request):
   print("HIT SEARCH VIEW")
   context = {}
 
+  # Start with future rides only (hide past trips)
+  today = date.today()
+  now_time = datetime.now().time()
+
+  people = Person.objects.filter(
+    Q(date__gt=today) | Q(date=today, time__gte=now_time)
+  )
+
   if "origin" in request.GET or "destination" in request.GET:
     context["inputExists"] = True
     
@@ -66,9 +76,6 @@ def search(request):
     # Parse the inputs
     origin_city, origin_state = parse_location(origin_input)
     destination_city, destination_state = parse_location(destination_input)
-    
-    # Start with all people
-    people = Person.objects.all()
     
     # Filter by origin if provided
     if origin_city or origin_state:
@@ -87,10 +94,104 @@ def search(request):
       if destination_state:
         destination_filter &= Q(destination_state__iexact=destination_state)
       people = people.filter(destination_filter)
-    
-    context["people"] = people
 
-        
+  context["people"] = people
   context["form"] = RideForm()
 
-  return render(request, "search_view.html", context)
+  return render(request, "index_view.html", context)
+
+
+def ride_detail(request, ride_id):
+  """Show details for a single ride and its booking status."""
+  ride = get_object_or_404(Person, id=ride_id)
+
+  # Determine if this ride is in the past
+  today = date.today()
+  now_time = datetime.now().time()
+  is_past = (ride.date < today) or (ride.date == today and ride.time < now_time)
+
+  passengers = ride.bookings.order_by("booked_at")
+
+  context = {
+    "ride": ride,
+    "is_past": is_past,
+    "is_full": ride.seats_available <= 0,
+    "passengers": passengers,
+    "booking_form": BookingForm(),
+  }
+  return render(request, "ride_detail.html", context)
+
+
+def book_seat(request, ride_id):
+  """Book a single seat on a ride, if available and not in the past."""
+  ride = get_object_or_404(Person, id=ride_id)
+
+  today = date.today()
+  now_time = datetime.now().time()
+  is_past = (ride.date < today) or (ride.date == today and ride.time < now_time)
+
+  if request.method != "POST":
+    return redirect("rides:detail", ride_id=ride.id)
+
+  form = BookingForm(request.POST)
+  if not form.is_valid():
+    messages.error(request, "Please correct the booking details below.")
+    today = date.today()
+    now_time = datetime.now().time()
+    is_past = (ride.date < today) or (ride.date == today and ride.time < now_time)
+    context = {
+      "ride": ride,
+      "is_past": is_past,
+      "is_full": ride.seats_available <= 0,
+      "booking_form": form,
+    }
+    return render(request, "ride_detail.html", context)
+
+  if is_past:
+    messages.error(request, "This ride has already departed and can no longer be booked.")
+  elif ride.seats_available <= 0:
+    messages.error(request, "This ride is full and has no seats left to book.")
+  else:
+    # At this point, booking details are valid; store them and update seats.
+    Booking.objects.create(
+      ride=ride,
+      first_name=form.cleaned_data["first_name"],
+      last_name=form.cleaned_data["last_name"],
+      email=form.cleaned_data["email"],
+    )
+    ride.seats_available -= 1
+    ride.save()
+    if ride.email:
+      messages.success(
+        request,
+        f"Seat booked successfully! You can contact the driver at {ride.email}.",
+      )
+    else:
+      messages.success(request, "Seat booked successfully! (Driver did not provide an email address.)")
+
+  return redirect("rides:detail", ride_id=ride.id)
+
+
+def offer(request):
+  """Show the form on its own page for offering a new ride."""
+  context = {
+    "new_ride_form": NewRideForm(),
+  }
+  return render(request, "create_ride.html", context)
+
+
+def create(request):
+  if request.method == "POST":
+    new_ride = NewRideForm(request.POST)
+    if new_ride.is_valid():
+      new_ride.save()
+      messages.success(request, "Your ride has been added successfully.")
+      return redirect("/rides")
+
+    # If the form is invalid, show errors on the offer page
+    messages.error(request, "Please correct the errors below to add your ride.")
+    context = {"new_ride_form": new_ride}
+    return render(request, "create_ride.html", context)
+
+  # Non-POST requests just go back to main rides page
+  return redirect("/rides")

@@ -6,14 +6,24 @@
   <table style="width:100%; border-collapse: collapse;">
       {% for person in people %}
       <tr>
-          <td>{{ person.first_name }}</td> 
-          <td>{{ person.origination }}</td>
+          <td>
+            <a href="{% url 'rides:detail' person.id %}" style="color:#2d1b69; text-decoration:none; font-weight:600;">
+              {{ person.first_name }}
+            </a>
+          </td> 
+          <td>{{ person.origination_city }}, {{ person.origination_state }}</td>
           <td>{{ person.destination_city }}</td> 
           <td>{{ person.destination_state }}</td> 
           <td>{{ person.date }}</td> 
           <td>{{ person.time }}</td> 
           <td>{{ person.taking_passengers }}</td>
-          <td>{{ person.seats_available }}</td> 
+          <td>
+            {% if person.seats_available|default:0 <= 0 %}
+              <span style="color:#b91c1c; font-weight:600;">Full</span>
+            {% else %}
+              {{ person.seats_available }}
+            {% endif %}
+          </td> 
       </tr>
       {% endfor %} 
   </table>
@@ -26,5 +36,9 @@
       {{ form.as_p }}
       <button type="submit" class="btn btn-primary">Submit</button>
   </form>
+</div>
+
+<div style="text-align: center; margin-top: 16px;">
+  <a href="{% url 'rides:offer' %}">Want to offer a ride instead?</a>
 </div>
 {% endblock %}

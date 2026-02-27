@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card" style="max-width: 700px; margin: 30px auto; color: #111; padding: 1.5rem 2rem;">
+  <h2 style="margin-bottom: 10px;">Ride Details</h2>
+  <p style="margin-bottom: 1rem; font-style: italic; color: #555;">
+    See the details for this trip and book an open seat if available.
+  </p>
+
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 1.5rem;">
+    <tr>
+      <th style="text-align: left; padding: 0.4rem 0.6rem;">Driver</th>
+      <td style="padding: 0.4rem 0.6rem;">
+        {{ ride.first_name }}{% if ride.last_name %} {{ ride.last_name }}{% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th style="text-align: left; padding: 0.4rem 0.6rem;">Email</th>
+      <td style="padding: 0.4rem 0.6rem;">
+        {% if ride.email %}{{ ride.email }}{% else %}<span style="color:#777;">Not provided</span>{% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th style="text-align: left; padding: 0.4rem 0.6rem;">From</th>
+      <td style="padding: 0.4rem 0.6rem;">
+        {{ ride.origination_city }}, {{ ride.origination_state }}
+      </td>
+    </tr>
+    <tr>
+      <th style="text-align: left; padding: 0.4rem 0.6rem;">To</th>
+      <td style="padding: 0.4rem 0.6rem;">
+        {{ ride.destination_city }}, {{ ride.destination_state }}
+      </td>
+    </tr>
+    <tr>
+      <th style="text-align: left; padding: 0.4rem 0.6rem;">Date</th>
+      <td style="padding: 0.4rem 0.6rem;">{{ ride.date }}</td>
+    </tr>
+    <tr>
+      <th style="text-align: left; padding: 0.4rem 0.6rem;">Time</th>
+      <td style="padding: 0.4rem 0.6rem;">{{ ride.time }}</td>
+    </tr>
+    <tr>
+      <th style="text-align: left; padding: 0.4rem 0.6rem;">Vehicle</th>
+      <td style="padding: 0.4rem 0.6rem;">
+        {% if ride.vehicle_type %}{{ ride.vehicle_type }}{% else %}<span style="color:#777;">Not specified</span>{% endif %}
+      </td>
+    </tr>
+    <tr>
+      <th style="text-align: left; padding: 0.4rem 0.6rem;">Car type</th>
+      <td style="padding: 0.4rem 0.6rem;">{{ ride.get_car_class_display }}</td>
+    </tr>
+    <tr>
+      <th style="text-align: left; padding: 0.4rem 0.6rem;">Seats available</th>
+      <td style="padding: 0.4rem 0.6rem;">
+        {% if is_past %}
+          <span style="color:#777;">Ride completed</span>
+        {% elif is_full %}
+          <span style="color:#b91c1c; font-weight: 600;">Full (no seats left)</span>
+        {% else %}
+          {{ ride.seats_available }}
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+
+  <div style="margin-bottom: 1.5rem;">
+    <h3 style="margin-bottom: 0.4rem;">Passengers booked so far</h3>
+    {% if passengers %}
+      <ul style="list-style: none; padding-left: 0;">
+        {% for p in passengers %}
+          <li style="margin-bottom: 0.25rem;">
+            {{ p.first_name }} {% if p.last_name %}{{ p.last_name }}{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p style="color:#777; font-style: italic;">No passengers have booked this ride yet.</p>
+    {% endif %}
+  </div>
+
+  {% if not is_past and not is_full %}
+    <form action="{% url 'rides:book' ride.id %}" method="post" style="text-align: left; margin-top: 1rem;">
+      {% csrf_token %}
+      <h3 style="margin-bottom: 0.6rem;">Book a seat</h3>
+      {{ booking_form.as_p }}
+      <div style="text-align: center; margin-top: 0.5rem;">
+        <button type="submit" class="btn btn-primary">Book a Seat</button>
+      </div>
+    </form>
+  {% else %}
+    <p style="text-align: center; font-weight: 600; color:#555;">
+      {% if is_past %}
+        This ride has already departed and can no longer be booked.
+      {% else %}
+        This ride is currently full and cannot accept more passengers.
+      {% endif %}
+    </p>
+  {% endif %}
+
+  <div style="margin-top: 1.5rem; text-align: center;">
+    <a href="{% url 'rides:index' %}">&larr; Back to all rides</a>
+  </div>
+</div>
+{% endblock %}
+

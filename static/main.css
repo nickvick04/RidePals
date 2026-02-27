@@ -71,6 +71,93 @@ nav {
   width: 100%;
 }
 
+/* Generic card container (used on rides pages) */
+.card {
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 18px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.25);
+  border: 3px solid #2d1b69; /* solid dark purple border */
+}
+
+.card h2 {
+  font-family: "Trebuchet MS", "Gill Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* Inputs / important text fields inside cards */
+.card input[type="text"],
+.card input[type="email"],
+.card input[type="number"],
+.card input[type="date"],
+.card input[type="time"],
+.card select,
+.card textarea {
+  width: 100%;
+  border: 1.5px solid #d9def5;
+  border-radius: 12px;
+  background: #fbfcff;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.98rem;
+  color: #1f2640;
+  box-shadow: 0 2px 8px rgba(18, 24, 53, 0.08);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.card input[type="text"]:focus,
+.card input[type="email"]:focus,
+.card input[type="number"]:focus,
+.card input[type="date"]:focus,
+.card input[type="time"]:focus,
+.card select:focus,
+.card textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.18), 0 8px 20px rgba(102, 126, 234, 0.14);
+}
+
+/* Rides table readability */
+.card table {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.card table td,
+.card table th {
+  background-color: #ffffff;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Flash messages */
+.messages {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 1.5rem auto;
+}
+
+.message {
+  min-width: 280px;
+  max-width: 600px;
+  text-align: center;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-family: "Trebuchet MS", "Gill Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+}
+
+.message.success {
+  background: linear-gradient(135deg, #38c172, #51d88a);
+  color: #f8fff4;
+}
+
+.message.error {
+  background: linear-gradient(135deg, #e3342f, #f6993f);
+  color: #fff5f5;
+}
+
 /* Hero / splash */
 .hero {
   display: flex;

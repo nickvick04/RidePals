@@ -19,7 +19,8 @@
       <ul class="nav-links">
         <li><a href="/">Home</a></li>
         <li><a href="/rides/">Search Riders</a></li>
-        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="/rides/offer/">Offer a Ride</a></li>
+        <li><a href="/how-it-works/">How It Works</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
@@ -27,6 +28,13 @@
   </header>
 
   <main class="content">
+    {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
     {% block content %}{% endblock %}
   </main>
 </body>
