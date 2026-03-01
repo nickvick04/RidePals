@@ -1,35 +1,82 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="card" style="max-width: 900px; margin: 30px auto; color: #111; padding: 2rem 2.5rem;">
-  <h2 style="margin-bottom: 12px;">How RidePals Works</h2>
-  <p style="margin-bottom: 1.2rem;">
-    RidePals makes it easy for drivers and passengers to share rides, save money, and reduce their environmental impact.
-  </p>
+<div class="hiw-page">
 
-  <h3 style="margin: 1.2rem 0 0.6rem;">1. Drivers share their upcoming trips</h3>
-  <p>
-    Drivers post details about their next trip &mdash; where they are leaving from, where they are going, when they plan to travel,
-    and how many seats they have available. This creates a ride listing that passengers can discover.
-  </p>
+  <div class="hiw-header">
+    <h1 class="hiw-title">How RidePals Works</h1>
+    <p class="hiw-subtitle">Carpooling made simple, affordable, and eco-friendly</p>
+  </div>
 
-  <h3 style="margin: 1.2rem 0 0.6rem;">2. Passengers search for matching rides</h3>
-  <p>
-    Passengers use the search page to look for rides that match their origin and destination. They can quickly browse available options,
-    compare times, and find a driver heading in the same direction.
-  </p>
+  <div class="hiw-steps">
 
-  <h3 style="margin: 1.2rem 0 0.6rem;">3. Carpooling made simple</h3>
-  <p>
-    Once a match is found, riders and passengers can coordinate the details of the trip. By sharing a ride, everyone helps
-    reduce traffic, lower carbon emissions, and cut down on travel costs.
-  </p>
+    <div class="hiw-step">
+      <div class="hiw-step-icon">🚗</div>
+      <div class="hiw-step-body">
+        <span class="hiw-step-number">Step 1</span>
+        <h2 class="hiw-step-title">Drivers post their trip</h2>
+        <p class="hiw-step-desc">
+          Heading somewhere? Post your trip in seconds — share your origin, destination, date, time,
+          and how many seats you have open. Your listing goes live immediately for passengers to find.
+        </p>
+      </div>
+    </div>
 
-  <h3 style="margin: 1.2rem 0 0.6rem;">Why it matters</h3>
-  <p>
-    Every shared ride means fewer cars on the road, less fuel burned, and more money saved. RidePals is designed to make
-    everyday carsharing and carpooling feel simple, safe, and convenient for both drivers and passengers.
-  </p>
-</section>
+    <div class="hiw-connector"></div>
+
+    <div class="hiw-step">
+      <div class="hiw-step-icon">🔍</div>
+      <div class="hiw-step-body">
+        <span class="hiw-step-number">Step 2</span>
+        <h2 class="hiw-step-title">Passengers search for rides</h2>
+        <p class="hiw-step-desc">
+          Search by city or state to find drivers going your way. Browse available options,
+          compare times, and pick the ride that works best for your schedule.
+        </p>
+      </div>
+    </div>
+
+    <div class="hiw-connector"></div>
+
+    <div class="hiw-step">
+      <div class="hiw-step-icon">🤝</div>
+      <div class="hiw-step-body">
+        <span class="hiw-step-number">Step 3</span>
+        <h2 class="hiw-step-title">Book a seat &amp; coordinate</h2>
+        <p class="hiw-step-desc">
+          Found a match? Book your seat directly on the ride page. The driver's contact info
+          is shared so you can sort out the details and hit the road together.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="hiw-why">
+    <h2 class="hiw-why-title">Why it matters</h2>
+    <div class="hiw-why-grid">
+      <div class="hiw-why-card">
+        <div class="hiw-why-icon">💰</div>
+        <h3>Save Money</h3>
+        <p>Split fuel and toll costs so everyone pays less for the same trip.</p>
+      </div>
+      <div class="hiw-why-card">
+        <div class="hiw-why-icon">🌍</div>
+        <h3>Cut Emissions</h3>
+        <p>Fewer cars on the road means less carbon in the atmosphere.</p>
+      </div>
+      <div class="hiw-why-card">
+        <div class="hiw-why-icon">⚡</div>
+        <h3>Less Traffic</h3>
+        <p>Every shared ride removes a car from the road for everyone.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="hiw-cta">
+    <a href="/rides/offer/" class="btn btn-submit">Post a Ride</a>
+    <a href="/rides/" class="btn btn-outline">Find a Ride</a>
+  </div>
+
+</div>
 {% endblock %}
-

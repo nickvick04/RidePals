@@ -1,44 +1,98 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="card" style="max-width: 900px; margin: 30px auto; color: #111;">
-  <h2 style="margin-bottom: 14px;">Available Rides</h2>
-  <table style="width:100%; border-collapse: collapse;">
-      {% for person in people %}
-      <tr>
-          <td>
-            <a href="{% url 'rides:detail' person.id %}" style="color:#2d1b69; text-decoration:none; font-weight:600;">
-              {{ person.first_name }}
-            </a>
-          </td> 
-          <td>{{ person.origination_city }}, {{ person.origination_state }}</td>
-          <td>{{ person.destination_city }}</td> 
-          <td>{{ person.destination_state }}</td> 
-          <td>{{ person.date }}</td> 
-          <td>{{ person.time }}</td> 
-          <td>{{ person.taking_passengers }}</td>
-          <td>
-            {% if person.seats_available|default:0 <= 0 %}
-              <span style="color:#b91c1c; font-weight:600;">Full</span>
+
+<div class="search-page">
+
+  <!-- Search form -->
+  <div class="search-hero">
+    <h1 class="search-heading">Find Your Ride</h1>
+    <p class="search-subheading">Search available rides by origin and destination</p>
+
+    <form class="search-form" action="{% url 'rides:index' %}" method="get" onsubmit="return checkForm();">
+      <div class="search-inputs">
+        <div class="search-field">
+          <label for="id_origin">🛫 Leaving from</label>
+          {{ form.origin }}
+        </div>
+        <div class="search-divider">→</div>
+        <div class="search-field">
+          <label for="id_destination">🛬 Heading to</label>
+          {{ form.destination }}
+        </div>
+        <div class="search-divider-v"></div>
+        <div class="search-field search-field-date">
+          <label for="id_date">📅 Date</label>
+          {{ form.date }}
+        </div>
+        <button type="submit" class="btn btn-search">Search</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Results -->
+  <div class="rides-section">
+    {% if inputExists %}
+      <h2 class="rides-heading">Search Results</h2>
+    {% else %}
+      <h2 class="rides-heading">All Available Rides</h2>
+    {% endif %}
+
+    {% if people %}
+      <div class="rides-grid">
+        {% for person in people %}
+        <a href="{% url 'rides:detail' person.id %}" class="ride-card">
+          <div class="ride-card-header">
+            <span class="ride-driver">{{ person.first_name }}{% if person.last_name %} {{ person.last_name }}{% endif %}</span>
+            {% if person.car_class == "premium" %}
+              <span class="ride-badge badge-premium">⭐ Premium</span>
             {% else %}
-              {{ person.seats_available }}
+              <span class="ride-badge badge-regular">Standard</span>
             {% endif %}
-          </td> 
-      </tr>
-      {% endfor %} 
-  </table>
-</div> 
+          </div>
 
-<div class="card" style="max-width: 650px; margin: 40px auto; color: #111;">
-  <h2 style="margin-bottom: 14px;">Search Riders</h2>
+          <div class="ride-route">
+            <span class="ride-city">{{ person.origination_city }}, {{ person.origination_state }}</span>
+            <span class="ride-arrow">→</span>
+            <span class="ride-city">{{ person.destination_city }}, {{ person.destination_state }}</span>
+          </div>
 
-  <form action="{% url 'rides:index' %}" method="get" onsubmit="return checkForm();">
-      {{ form.as_p }}
-      <button type="submit" class="btn btn-primary">Submit</button>
-  </form>
-</div>
+          <div class="ride-meta">
+            <span class="ride-meta-item">📅 {{ person.date }}</span>
+            <span class="ride-meta-item">🕐 {{ person.time }}</span>
+            {% if person.vehicle_type %}
+              <span class="ride-meta-item">🚘 {{ person.vehicle_type }}</span>
+            {% endif %}
+            <span class="ride-meta-item ride-seats {% if person.seats_available <= 0 %}seats-full{% endif %}">
+              {% if person.seats_available <= 0 %}
+                🚫 Full
+              {% else %}
+                💺 {{ person.seats_available }} seat{{ person.seats_available|pluralize }} left
+              {% endif %}
+            </span>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
 
-<div style="text-align: center; margin-top: 16px;">
-  <a href="{% url 'rides:offer' %}">Want to offer a ride instead?</a>
+    {% elif inputExists %}
+      <div class="rides-empty">
+        <div class="rides-empty-icon">🔍</div>
+        <p>No rides found matching your search.</p>
+        <a href="{% url 'rides:index' %}" class="btn btn-outline">Clear search</a>
+      </div>
+
+    {% else %}
+      <div class="rides-empty">
+        <div class="rides-empty-icon">🚗</div>
+        <p>No rides available right now.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="offer-link">
+    <a href="{% url 'rides:offer' %}" class="btn btn-outline">+ Offer a ride</a>
+  </div>
+
 </div>
 {% endblock %}

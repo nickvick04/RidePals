@@ -1,19 +1,117 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="card" style="max-width: 650px; margin: 40px auto; color: #111;">
-  <h2 style="margin-bottom: 6px;">Offer a Ride</h2>
-  <p style="margin-bottom: 14px; font-style: italic;">Find passengers for your next trip!</p>
+<div class="offer-page">
 
-  <form action="{% url 'rides:create' %}" method="post">
-    {% csrf_token %}
-    {{ new_ride_form.as_p }}
-    <button type="submit" class="btn btn-primary">Submit Ride</button>
-  </form>
-
-  <div style="margin-top: 16px;">
-    <a href="{% url 'rides:index' %}">&larr; Back to search</a>
+  <div class="offer-header">
+    <h1 class="offer-title">Offer a Ride</h1>
+    <p class="offer-subtitle">Share your trip and help others get where they're going</p>
   </div>
+
+  <form class="offer-form" action="{% url 'rides:create' %}" method="post">
+    {% csrf_token %}
+
+    {% if new_ride_form.non_field_errors %}
+      <div class="offer-errors">{{ new_ride_form.non_field_errors }}</div>
+    {% endif %}
+
+    <!-- About You -->
+    <div class="offer-section">
+      <h2 class="offer-section-title">👤 About You</h2>
+      <div class="offer-row">
+        <div class="offer-field">
+          <label for="{{ new_ride_form.first_name.id_for_label }}">First Name</label>
+          {{ new_ride_form.first_name }}
+          {% if new_ride_form.first_name.errors %}<span class="field-error">{{ new_ride_form.first_name.errors|join:", " }}</span>{% endif %}
+        </div>
+        <div class="offer-field">
+          <label for="{{ new_ride_form.last_name.id_for_label }}">Last Name</label>
+          {{ new_ride_form.last_name }}
+          {% if new_ride_form.last_name.errors %}<span class="field-error">{{ new_ride_form.last_name.errors|join:", " }}</span>{% endif %}
+        </div>
+      </div>
+      <div class="offer-row">
+        <div class="offer-field offer-field-full">
+          <label for="{{ new_ride_form.email.id_for_label }}">Email <span class="field-optional">(optional — so passengers can contact you)</span></label>
+          {{ new_ride_form.email }}
+          {% if new_ride_form.email.errors %}<span class="field-error">{{ new_ride_form.email.errors|join:", " }}</span>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- The Trip -->
+    <div class="offer-section">
+      <h2 class="offer-section-title">🗺️ The Trip</h2>
+      <div class="offer-row">
+        <div class="offer-field">
+          <label for="{{ new_ride_form.origination_city.id_for_label }}">Departing City</label>
+          {{ new_ride_form.origination_city }}
+          {% if new_ride_form.origination_city.errors %}<span class="field-error">{{ new_ride_form.origination_city.errors|join:", " }}</span>{% endif %}
+        </div>
+        <div class="offer-field offer-field-small">
+          <label for="{{ new_ride_form.origination_state.id_for_label }}">State</label>
+          {{ new_ride_form.origination_state }}
+          {% if new_ride_form.origination_state.errors %}<span class="field-error">{{ new_ride_form.origination_state.errors|join:", " }}</span>{% endif %}
+        </div>
+      </div>
+      <div class="offer-row-arrow">→</div>
+      <div class="offer-row">
+        <div class="offer-field">
+          <label for="{{ new_ride_form.destination_city.id_for_label }}">Destination City</label>
+          {{ new_ride_form.destination_city }}
+          {% if new_ride_form.destination_city.errors %}<span class="field-error">{{ new_ride_form.destination_city.errors|join:", " }}</span>{% endif %}
+        </div>
+        <div class="offer-field offer-field-small">
+          <label for="{{ new_ride_form.destination_state.id_for_label }}">State</label>
+          {{ new_ride_form.destination_state }}
+          {% if new_ride_form.destination_state.errors %}<span class="field-error">{{ new_ride_form.destination_state.errors|join:", " }}</span>{% endif %}
+        </div>
+      </div>
+      <div class="offer-row">
+        <div class="offer-field">
+          <label for="{{ new_ride_form.date.id_for_label }}">Date</label>
+          {{ new_ride_form.date }}
+          {% if new_ride_form.date.errors %}<span class="field-error">{{ new_ride_form.date.errors|join:", " }}</span>{% endif %}
+        </div>
+        <div class="offer-field">
+          <label for="{{ new_ride_form.time.id_for_label }}">Time</label>
+          {{ new_ride_form.time }}
+          {% if new_ride_form.time.errors %}<span class="field-error">{{ new_ride_form.time.errors|join:", " }}</span>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Your Vehicle -->
+    <div class="offer-section">
+      <h2 class="offer-section-title">🚘 Your Vehicle</h2>
+      <div class="offer-row">
+        <div class="offer-field offer-field-full">
+          <label for="{{ new_ride_form.vehicle_type.id_for_label }}">Vehicle Type <span class="field-optional">(optional — e.g. Toyota Camry)</span></label>
+          {{ new_ride_form.vehicle_type }}
+          {% if new_ride_form.vehicle_type.errors %}<span class="field-error">{{ new_ride_form.vehicle_type.errors|join:", " }}</span>{% endif %}
+        </div>
+      </div>
+      <div class="offer-row">
+        <div class="offer-field offer-field-small">
+          <label for="{{ new_ride_form.seats_available.id_for_label }}">Seats Available</label>
+          {{ new_ride_form.seats_available }}
+          {% if new_ride_form.seats_available.errors %}<span class="field-error">{{ new_ride_form.seats_available.errors|join:", " }}</span>{% endif %}
+        </div>
+        <div class="offer-field offer-checkbox-field">
+          <label class="offer-checkbox-label">
+            {{ new_ride_form.taking_passengers }}
+            <span>Taking passengers</span>
+          </label>
+          {% if new_ride_form.taking_passengers.errors %}<span class="field-error">{{ new_ride_form.taking_passengers.errors|join:", " }}</span>{% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="offer-actions">
+      <a href="{% url 'rides:index' %}" class="btn btn-outline">← Back</a>
+      <button type="submit" class="btn btn-submit">Post My Ride</button>
+    </div>
+
+  </form>
 </div>
 {% endblock %}
-

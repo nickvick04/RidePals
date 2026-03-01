@@ -21,9 +21,20 @@
         <li><a href="/rides/">Search Riders</a></li>
         <li><a href="/rides/offer/">Offer a Ride</a></li>
         <li><a href="/how-it-works/">How It Works</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="/contact/">Contact</a></li>
       </ul>
+      <div class="nav-auth">
+        {% if user.is_authenticated %}
+          <a href="/accounts/my-rides/" class="nav-auth-link">My Rides</a>
+          <form method="post" action="/accounts/logout/" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="nav-auth-btn">Sign Out</button>
+          </form>
+        {% else %}
+          <a href="/accounts/login/" class="nav-auth-link">Sign In</a>
+          <a href="/accounts/signup/" class="nav-auth-btn-primary">Sign Up</a>
+        {% endif %}
+      </div>
     </nav>
   </header>
 
