@@ -1,8 +1,14 @@
+from django.conf import settings
 from django.db import models
 
-# Create your models here.
 
 class Person(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True, blank=True,
+        on_delete=models.SET_NULL,
+        related_name="offered_rides",
+    )
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100, blank=True)
     email = models.EmailField(blank=True)
@@ -23,6 +29,12 @@ class Person(models.Model):
 
 
 class Booking(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True, blank=True,
+        on_delete=models.SET_NULL,
+        related_name="bookings_made",
+    )
     ride = models.ForeignKey(Person, on_delete=models.CASCADE, related_name="bookings")
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)

@@ -12,7 +12,11 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 import os
-import dj_database_url
+try:
+    import dj_database_url
+    _DJ_DATABASE_URL_AVAILABLE = True
+except ImportError:
+    _DJ_DATABASE_URL_AVAILABLE = False
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -118,6 +122,11 @@ USE_L10N = True
 USE_TZ = True
 
 
+# Auth redirects
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = '/rides/'
+LOGOUT_REDIRECT_URL = '/'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
@@ -126,6 +135,7 @@ STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Use dj-database-url if DATABASE_URL env var is set (Heroku), else fall back to SQLite
-db_from_env = dj_database_url.config(conn_max_age=600)
-if db_from_env:
-    DATABASES['default'].update(db_from_env)
+if _DJ_DATABASE_URL_AVAILABLE:
+    db_from_env = dj_database_url.config(conn_max_age=600)
+    if db_from_env:
+        DATABASES['default'].update(db_from_env)

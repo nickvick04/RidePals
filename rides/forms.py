@@ -1,25 +1,46 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 from .models import Person
 
 
+class SignUpForm(UserCreationForm):
+    first_name = forms.CharField(max_length=100, required=True, label="First name")
+    last_name = forms.CharField(max_length=100, required=True, label="Last name")
+    email = forms.EmailField(required=True, label="Email")
+
+    class Meta:
+        model = User
+        fields = ["username", "first_name", "last_name", "email", "password1", "password2"]
+
+
 class RideForm(forms.Form):
   origin = forms.CharField(
-    label='Leaving From', 
+    label='Leaving From',
     max_length=100,
     required=False,
     widget=forms.TextInput(attrs={
-      'placeholder': 'e.g., San Fransisco, CA',
+      'placeholder': 'e.g., San Francisco, CA',
       'class': 'form-control'
     })
   )
-  
+
   destination = forms.CharField(
-    label='Heading To', 
+    label='Heading To',
     max_length=100,
     required=False,
     widget=forms.TextInput(attrs={
       'placeholder': 'e.g., Los Angeles, CA',
+      'class': 'form-control'
+    })
+  )
+
+  date = forms.DateField(
+    label='Date',
+    required=False,
+    widget=forms.DateInput(attrs={
+      'type': 'date',
       'class': 'form-control'
     })
   )

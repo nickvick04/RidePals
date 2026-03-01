@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard-page">
+
+  <div class="dashboard-header">
+    <h1 class="dashboard-title">My Rides</h1>
+    <p class="dashboard-subtitle">Welcome back, {{ user.first_name|default:user.username }}</p>
+  </div>
+
+  <!-- Rides Offered -->
+  <section class="dashboard-section">
+    <div class="dashboard-section-header">
+      <h2 class="dashboard-section-title">🚗 Rides Offered</h2>
+      <a href="{% url 'rides:offer' %}" class="btn btn-submit dashboard-action-btn">+ Post a Ride</a>
+    </div>
+
+    {% if offered_rides %}
+      <div class="rides-grid">
+        {% for ride in offered_rides %}
+          <a href="{% url 'rides:detail' ride.id %}" class="ride-card {% if ride.is_past %}ride-card-past{% endif %}">
+            <div class="ride-card-header">
+              <span class="ride-driver">
+                {{ ride.origination_city }}, {{ ride.origination_state }}
+                <span class="ride-arrow">→</span>
+                {{ ride.destination_city }}, {{ ride.destination_state }}
+              </span>
+              {% if ride.car_class == "premium" %}
+                <span class="ride-badge badge-premium">⭐ Premium</span>
+              {% else %}
+                <span class="ride-badge badge-regular">Standard</span>
+              {% endif %}
+            </div>
+            <div class="ride-meta">
+              <span class="ride-meta-item">📅 {{ ride.date }}</span>
+              <span class="ride-meta-item">🕐 {{ ride.time }}</span>
+              <span class="ride-meta-item">💺 {{ ride.seats_available }} left · {{ ride.bookings.count }} booked</span>
+              {% if ride.is_past %}<span class="ride-meta-item ride-past-tag">Completed</span>{% endif %}
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="dashboard-empty">
+        <p>You haven't posted any rides yet.</p>
+        <a href="{% url 'rides:offer' %}" class="btn btn-outline">Post your first ride</a>
+      </div>
+    {% endif %}
+  </section>
+
+  <!-- Rides Booked -->
+  <section class="dashboard-section">
+    <div class="dashboard-section-header">
+      <h2 class="dashboard-section-title">🎫 Rides Booked</h2>
+      <a href="{% url 'rides:index' %}" class="btn btn-outline dashboard-action-btn">Find a Ride</a>
+    </div>
+
+    {% if bookings %}
+      <div class="rides-grid">
+        {% for booking in bookings %}
+          <div class="ride-card {% if booking.ride_is_past %}ride-card-past{% endif %}">
+            <a href="{% url 'rides:detail' booking.ride.id %}" class="ride-card-link">
+              <div class="ride-card-header">
+                <span class="ride-driver">
+                  {{ booking.ride.origination_city }}, {{ booking.ride.origination_state }}
+                  <span class="ride-arrow">→</span>
+                  {{ booking.ride.destination_city }}, {{ booking.ride.destination_state }}
+                </span>
+                {% if booking.ride.car_class == "premium" %}
+                  <span class="ride-badge badge-premium">⭐ Premium</span>
+                {% else %}
+                  <span class="ride-badge badge-regular">Standard</span>
+                {% endif %}
+              </div>
+              <div class="ride-meta">
+                <span class="ride-meta-item">📅 {{ booking.ride.date }}</span>
+                <span class="ride-meta-item">🕐 {{ booking.ride.time }}</span>
+                <span class="ride-meta-item">👤 Driver: {{ booking.ride.first_name }}</span>
+                {% if booking.ride_is_past %}<span class="ride-meta-item ride-past-tag">Completed</span>{% endif %}
+              </div>
+            </a>
+            {% if not booking.ride_is_past %}
+              <form method="post" action="{% url 'rides:cancel_booking' booking.id %}" class="cancel-form">
+                {% csrf_token %}
+                <button type="submit" class="btn-cancel" onclick="return confirm('Are you sure you want to cancel this booking?')">Cancel booking</button>
+              </form>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="dashboard-empty">
+        <p>You haven't booked any rides yet.</p>
+        <a href="{% url 'rides:index' %}" class="btn btn-outline">Find a ride</a>
+      </div>
+    {% endif %}
+  </section>
+
+</div>
+{% endblock %}
