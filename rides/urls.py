@@ -19,4 +19,7 @@ urlpatterns = [
 
     # /rides/create/
     path("create/", views.create, name="create"),
+
+    # Cancel a booking
+    path("bookings/<int:booking_id>/cancel/", views.cancel_booking, name="cancel_booking"),
 ]
